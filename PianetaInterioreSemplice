@@ -1,0 +1,68 @@
+import React, { useState, useEffect } from 'react';
+
+const PianetaInterioreSemplice = () => {
+  const [pianeti, setPianeti] = useState([]);
+  const [nomePianeta, setNomePianeta] = useState('');
+  const [descrizionePianeta, setDescrizionePianeta] = useState('');
+
+  useEffect(() => {
+    const pianetiSalvati = localStorage.getItem('pianeti');
+    if (pianetiSalvati) {
+      setPianeti(JSON.parse(pianetiSalvati));
+    }
+  }, []);
+
+  const salvaPianeta = (e) => {
+    e.preventDefault();
+    const nuovoPianeta = { nome: nomePianeta, descrizione: descrizionePianeta };
+    const nuoviPianeti = [...pianeti, nuovoPianeta];
+    setPianeti(nuoviPianeti);
+    localStorage.setItem('pianeti', JSON.stringify(nuoviPianeti));
+    setNomePianeta('');
+    setDescrizionePianeta('');
+  };
+
+  return (
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+      <h1>Il Tuo Pianeta Interiore</h1>
+      
+      <form onSubmit={salvaPianeta}>
+        <div>
+          <label htmlFor="nomePianeta">Nome del Pianeta:</label>
+          <input
+            type="text"
+            id="nomePianeta"
+            value={nomePianeta}
+            onChange={(e) => setNomePianeta(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+          />
+        </div>
+        <div>
+          <label htmlFor="descrizionePianeta">Descrizione del Pianeta:</label>
+          <textarea
+            id="descrizionePianeta"
+            value={descrizionePianeta}
+            onChange={(e) => setDescrizionePianeta(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+          />
+        </div>
+        <button type="submit" style={{ padding: '10px 20px', backgroundColor: 'black', color: 'white', border: 'none' }}>
+          Salva Pianeta
+        </button>
+      </form>
+
+      <h2 style={{ marginTop: '20px' }}>Pianeti Creati:</h2>
+      <ul>
+        {pianeti.map((pianeta, index) => (
+          <li key={index} style={{ marginBottom: '10px' }}>
+            <strong>{pianeta.nome}</strong>: {pianeta.descrizione}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default PianetaInterioreSemplice;
